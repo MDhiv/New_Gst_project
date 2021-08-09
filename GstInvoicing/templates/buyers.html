@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}
+<div class="row">
+	<div class="col">
+		<h2>Buyer</h2>
+	</div>
+	<div class="col">
+		<a href="{% url 'buyer_add' %}" id="add_buyer_btn"><button type="button" class="btn btn-primary">Add New</button></a>
+	</div>
+</div>
+
+<table class="table table-bordered" id="buyer-table">
+	<thead>
+		<tr>
+			<th>Gstin</th>
+			<th>LglNm</th>
+			<th>TrdNm</th>
+			<th>Addr1</th>
+			<th>Addr2</th>
+			<th>Loc</th>
+            <th>Pin</th>
+            <th>Stcd</th>
+            <th>Ph</th>
+            <th>Em</th>
+		</tr>
+	</thead>
+	<tbody class="two-col-form">
+		{% for buyer in buyers %}
+		<tr>
+			<td>{{buyer.buyer_gstin}}</td>
+			<td>{{buyer.buyer_lglnm}}</td>
+			<td>{{buyer.buyer_trdnm}}</td>
+			<td>{{buyer.buyer_addr1}}</td>
+			<td>{{buyer.buyer_addr2}}</td>
+			<td>{{buyer.buyer_loc}}</td>
+			<td>{{buyer.buyer_pin}}</td>
+			<td>{{buyer.buyer_stcd}}</td>
+			<td>{{buyer.buyer_ph}}</td>
+            <td>{{buyer.buyer_em}}</td>
+
+
+			<td><a href="{% url 'buyer_edit' buyer.id %}"><button type="button" class="btn btn-dark">Edit</button></a></td>
+			<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#buyerDeleteModal" data-buyer-id="{{buyer.id}}" data-buyer-gstin="{{buyer.buyer_gstin}}">Delete</button></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<div class="modal fade" id="buyerDeleteModal" tabindex="-1" role="dialog" aria-labelledby="buyerDeleteModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="buyerDeleteModalLabel">Are you sure?</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form method="POST" action="{% url 'buyer_delete' %}">
+			{% csrf_token %}
+			<div class="modal-body">
+				Are you sure you want to delete <b><span class="buyer-gstin"></span></b>?
+					<div class="form-group">
+						<input hidden="true" type="text" class="form-control" name="buyer_id">
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-danger" >Yes</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+
+{% block includejs %}
+<script type="text/javascript">
+$('#buyerDeleteModal').on('show.bs.modal', function (event) {
+	var button = $(event.relatedTarget)
+	var buyer_id = button.data('buyer-id') 
+	var buyer_gstin = button.data('buyer-gstin') 
+	var modal = $(this)
+	modal.find('.modal-body input').val(buyer_id)
+	console.log(buyer_gstin)
+	modal.find('.buyer-gstin').html(buyer_gstin)
+});
+
+
+$(document).ready( function () {
+	$('#buyer-table').DataTable({
+		"order": [],
+		"columnDefs": [ {
+			"targets": 4,
+			"sortable": false,
+			"searchable": false
+		},
+		{
+			"targets": 5,
+			"sortable": false,
+			"searchable": false
+		} ],
+		"paging": true
+	});
+});
+
+</script>
+{% endblock %}

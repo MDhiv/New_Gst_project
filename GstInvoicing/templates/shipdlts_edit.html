@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}
+<h2>Edit Shipdlts Details</h2>
+<form method="POST">
+	{% csrf_token %}
+	<table class="table">
+		<tbody class="two-col-form">
+			<tr>
+				<th scope="row" class="text-right">Shipdlts Gstin:</th>
+				<td class="form-input-td">{{shipdlts_form.shipdlts_gstin}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">Shipdlts LglNm:</th>
+				<td class="form-input-td">{{shipdlts_form.shipdlts_lglnm}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">ShipDlts TrdNm:</th>
+				<td class="form-input-td">{{shipdlts_form.shipdlts_trdnm}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">ShipDlts Addr1:</th>
+				<td class="form-input-td">{{shipdlts_form.shipdlts_addr1}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">Shipdlts Addr2:</th>
+				<td class="form-input-td">{{shipdlts_form.shipdlts_addr2}}</td>
+			</tr>
+			<tr>
+			<tr>
+				<th scope="row" class="text-right">ShipDlts Loc:</th>
+				<td class="form-input-td">{{shipdlts_form.shipdlts_loc}}</td>
+			</tr>
+			<tr>
+			<tr>
+				<th scope="row" class="text-right">ShipDlts Pin:</th>
+				<td class="form-input-td">{{shipdlts_form.shipdlts_pin}}</td>
+			</tr>
+			<tr>
+			<tr>
+				<th scope="row" class="text-right">ShipDlts Stcd:</th>
+				<td class="form-input-td">{{shipdlts_form.shipdlts_stcd}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<input type="submit" class="btn btn-primary float-right" value="Submit">
+</form>
+
+{% endblock %}

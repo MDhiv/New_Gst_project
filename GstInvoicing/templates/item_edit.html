@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<h2>Edit Item List</h2>
+<form method="POST">
+	{% csrf_token %}
+	<table class="table">
+		<tbody class="two-col-form">
+			<tr>
+				<th scope="row" class="text-right">Item SlNo:</th>
+				<td class="form-input-td">{{item_form.item_slno}}</td>
+			</tr>   
+			<tr>
+				<th scope="row" class="text-right">PrdDesc:</th>
+				<td class="form-input-td">{{item_form.item_prddesc}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">IsServc:</th>
+				<td class="form-input-td">{{item_form.item_isservc}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">HsnCd:</th>
+				<td class="form-input-td">{{item_form.item_hsncd}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">Barcde:</th>
+				<td class="form-input-td">{{item_form.item_barcde}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">Qty:</th>
+				<td class="form-input-td">{{item_form.item_qty}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">FreeQty:</th>
+				<td class="form-input-td">{{item_form.item_freeqty}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">Unit:</th>
+				<td class="form-input-td">{{item_form.item_unit}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">UnitPrice:</th>
+				<td class="form-input-td">{{item_form.item_unitprice}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">TotAmt:</th>
+				<td class="form-input-td">{{item_form.item_totamt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">Discount:</th>
+				<td class="form-input-td">{{item_form.item_discount}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">PreTaxVal:</th>
+				<td class="form-input-td">{{item_form.item_pretaxval}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">AssAmt:</th>
+				<td class="form-input-td">{{item_form.item_assamt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">GstRt:</th>
+				<td class="form-input-td">{{item_form.item_gstrt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">IgstAmt:</th>
+				<td class="form-input-td">{{item_form.item_igstamt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">CgstAmt:</th>
+				<td class="form-input-td">{{item_form.item_cgstamt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">SgstAmt:</th>
+				<td class="form-input-td">{{item_form.item_sgstamt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">CesRt:</th>
+				<td class="form-input-td">{{item_form.item_cesrt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">CesAmt:</th>
+				<td class="form-input-td">{{item_form.item_cesamt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">CesNonAdvlAmt:</th>
+				<td class="form-input-td">{{item_form.item_cesnonadvlamt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">StateCesRt:</th>
+				<td class="form-input-td">{{item_form.item_statecesrt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">StateCesAmt:</th>
+				<td class="form-input-td">{{item_form.item_statecesamt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">StateCesNonAdvlAmt:</th>
+				<td class="form-input-td">{{item_form.item_statecesnonadvlamt}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">OthChrg:</th>
+				<td class="form-input-td">{{item_form.item_othchrg}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">TotItemVal:</th>
+				<td class="form-input-td">{{item_form.item_totitemval}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">OrdLineRef:</th>
+				<td class="form-input-td">{{item_form.item_ordlineref}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">OrgCntry:</th>
+				<td class="form-input-td">{{item_form.item_orgcntry}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right">PrdSlNo:</th>
+				<td class="form-input-td">{{item_form.item_prdslno}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<input type="submit" class="btn btn-primary float-right" value="Submit">
+</form>
+{% endblock %}

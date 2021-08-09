@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+
+
+{% load static %}
+<!doctype html>
+
+{% block content %}
+
+<h2>Create Invoice</h2>
+
+<form method="POST" id="invoice-form" hidden="true">
+
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th class="table-active" scope="col" colspan="4">Invoice Details</th>
+			</tr>
+		</thead>
+
+		<tbody class="two-col-form">
+			<tr>
+				<th scope="row">Invoice Number</th>
+				<td class="form-input-td"><input name="invoice-number" type="number" class="form-control" placeholder="Invoice Number" value="{{default_invoice_number}}"></td>
+				<th scope="row">Date</th>
+				<td class="form-input-td"><input name="invoice-date" type="date" class="form-control", value="{{default_invoice_date}}"></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th class="table-active" scope="col" colspan="4">Dispdlts Details:</th>
+			</tr>
+		</thead>
+
+		<tbody class="two-col-form">
+			<tr>
+				<th scope="row">Dispdlts Name</th>
+				<td class="form-input-td dispdlts_search_area"><input autocomplete="off" name="dispdlts-name" type="text" class="form-control dispdlts_search_input" id="dispdlts-name-input" placeholder="Dispdlts Name" required>
+				</td>
+				<th scope="row"> Dispdlts Loc</th>
+				<td class="form-input-td"><input autocomplete="off" name="dispdlts-loc" type="tel" class="form-control" id="dispdlts-loc-input" placeholder="Dispdlts Loc"></td>
+				</tr>
+			<tr>
+				<th scope="row">Dispdlts Address1</th>
+				<td class="form-input-td"><input autocomplete="off" name="dispdlts-address1" type="text" class="form-control" id="dispdlts-address1-input" placeholder="Dispdlts Address1" required></td>
+				<th scope="row">Dispdlts Address2</th>
+				<td class="form-input-td"><input autocomplete="off" name="dispdlts-address2" type="text" class="form-control" id="dispdlts-address2-input" placeholder="Dispdlts Address2" required></td>
+
+			</tr>
+			<tr>
+				<th scope="row">Dispdlts Pin</th>
+				<td class="form-input-td"><input autocomplete="off" name="dispdlts-pin" type="text" class="form-control" id="dispdlts-pin-input" placeholder="Dispdlts Pin"></td>
+				<th scope="row">Dispdlts Stcd</th>
+				<td class="form-input-td"><input autocomplete="off" name="dispdlts-stcd" type="text" class="form-control" id="dispdlts-stcd-input" placeholder="Dispdlts Stcd"></td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th class="table-active" scope="col" colspan="4">ShipDlts Details</th>
+			</tr>
+		</thead>
+
+		<tbody class="two-col-form">
+			<tr>
+				<th scope="row">ShipDlts Gstin</th>
+				<td class="form-input-td ShipDlts_search_area"><input autocomplete="off" name="shipdlts-gstin" type="text" class="form-control shipdlts_search_input" id="shipdlts-gstin-input" placeholder="Shipdlts Gstin" required>
+				</td>
+				<th scope="row">ShipDlts LglNm</th>
+				<td class="form-input-td"><input autocomplete="off" name="shipdlts-lglnm" type="text" class="form-control" id="shipdlts-lglnm-input" placeholder="ShipDlts LglNm" required></td>
+			</tr>
+			<tr>
+				<th scope="row">ShipDlts TrdNm</th>
+				<td class="form-input-td"><input autocomplete="off" name="shipdlts-trdnm" type="text" class="form-control" id="shipdlts-trdnm-input" placeholder="ShipDlts TrdNm" required></td>
+				<th scope="row">ShipDlts Addr1</th>
+				<td class="form-input-td"><input autocomplete="off" name="shipdlts-addr1" type="tel" class="form-control" id="shipdlts-addr1-input" placeholder="ShipDlts Addr1"></td>
+            </tr>
+			<tr>
+				<th scope="row">ShipDlts Addr2</th>
+				<td class="form-input-td"><input autocomplete="off" name="shipdlts-addr2" type="text" class="form-control" id="shipdlts-addr2-input" placeholder="ShipDlts Addr2" required>
+				<th scope="row">ShipDlts Loc</th>
+				<td class="form-input-td"><input autocomplete="off" name="shipdlts-loc" type="text" class="form-control" id="shipdlts-loc-input" placeholder="shipdlts Loc" required>
+            </tr>
+			<tr>
+				<th scope="row">ShipDlts Pin</th>
+				<td class="form-input-td"><input autocomplete="off" name="shipdlts-pin" type="text" class="form-control" id="shipdlts-pin-input" placeholder="ShipDlts Pin" required>
+				<th scope="row">ShipDlts Stcd</th>
+				<td class="form-input-td"><input autocomplete="off" name="shipdlts-stcd" type="text" class="form-control" id="shipdlts-stcd-input" placeholder="ShipDlts Stcd" required>
+		    </tr>
+		</tbody>
+	</table>
+	<table class="table table-bordered">
+		<tbody class="two-col-form">
+			<tr>
+				<th scope="row"></th>
+				<td class="form-input-td">
+					<div class="form-check">
+						<input class="form-check-input" name="igstcheck" type="checkbox" id="igstcheck">
+						<label class="form-check-label" for="igstcheck">
+							IGST
+						</label>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table class="table table-bordered" id="invoice-form-items-table">
+		<thead>
+			<th class="table-active" scope="col" colspan="13">Product</th>
+
+			<tr>
+				<th scope="col">Sl No.</th>
+				<th scope="col">Product</th>
+				<th scope="col">HSN / SAC</th>
+				<th scope="col">Unit</th>
+				<th scope="col">Qty</th>
+				<th scope="col">Rate with GST</th>
+				<th scope="col">GST %</th>
+				<th scope="col">Rate without GST</th>
+
+
+				<th scope="col">Amt without GST</th>
+				<th scope="col">SGST</th>
+				<th scope="col">CGST</th>
+				<th scope="col">IGST</th>
+				<th scope="col">Amt with GST</th>
+
+			</tr>
+		</thead>
+		<tbody id="invoice-form-items-table-body">
+			<tr>
+				<td class="invoice-item-slno">1</td>
+				<td class="form-input-td"><input name="invoice-product" type="text" class="form-control product_search_area product_search_input" placeholder="Product"></td>
+				<td class="form-input-td"><input name="invoice-hsn" type="text" class="form-control" placeholder="HSN"></td>
+				<td class="form-input-td"><input name="invoice-unit" type="text" class="form-control" placeholder="Unit"></td>
+				<td class="form-input-td"><input name="invoice-qty" type="number" step="any" class="form-control" placeholder="Qty"></td>
+				<td class="form-input-td"><input name="invoice-rate-with-gst" type="number" step="any" class="form-control" placeholder="Rate with GST"></td>
+				<td class="form-input-td"><input name="invoice-gst-percentage" type="number" step="any" class="form-control" placeholder="GST %"></td>
+
+
+				<td class="form-input-td"><input name="invoice-rate-without-gst" type="number" step="any" class="form-control" placeholder="Rate without GST" readonly></td>
+				<td class="form-input-td"><input name="invoice-amt-without-gst" type="number" step="any" class="form-control" readonly></td>
+				<td class="form-input-td"><input name="invoice-amt-sgst" type="number" step="any" class="form-control" readonly></td>
+				<td class="form-input-td"><input name="invoice-amt-cgst" type="number" step="any" class="form-control" readonly></td>
+				<td class="form-input-td"><input name="invoice-amt-igst" type="number" step="any" class="form-control" readonly></td>
+				<td class="form-input-td"><input name="invoice-amt-with-gst" type="number" step="any" class="form-control" readonly></td>
+			</tr>
+		</tbody>
+
+		<tr>
+			<td colspan="8" class="text-right"><strong>TOTAL:</strong></td>
+			<td class="form-input-td"><input name="invoice-total-amt-without-gst" type="number" step="any" class="form-control" readonly></td>
+			<td class="form-input-td"><input name="invoice-total-amt-sgst" type="number" step="any" class="form-control" readonly></td>
+			<td class="form-input-td"><input name="invoice-total-amt-cgst" type="number" step="any" class="form-control" readonly></td>
+			<td class="form-input-td"><input name="invoice-total-amt-igst" type="number" step="any" class="form-control" readonly></td>
+			<td class="form-input-td"><input name="invoice-total-amt-with-gst" type="number" step="any" class="form-control" readonly></td>
+		</tr>
+        <table class="table table-bordered" id="invoice-form-items-List-table">
+		<thead>
+			<th class="table-active" scope="col" colspan="13">Items List</th>
+
+			<tr>
+				<th scope="col">Item SlNo.</th>
+				<th scope="col">PrdDesc</th>
+				<th scope="col">IsServc</th>
+				<th scope="col">HsnCd</th>
+				<th scope="col">Barcde</th>
+				<th scope="col">Qty</th>
+				<th scope="col">FreeQty</th>
+				<th scope="col">Unit</th>
+				<th scope="col">UnitPrice</th>
+				<th scope="col">TotAmt</th>
+				<th scope="col">Discount</th>
+				<th scope="col">PreTaxVal</th>
+				<th scope="col">AssAmt</th>
+				<th scope="col">GstRt</th>
+				<th scope="col">IgstAmt</th>
+				<th scope="col">CgstAmt</th>
+				<th scope="col">SgstAmt</th>
+				<th scope="col">CesRt</th>
+				<th scope="col">CesAmt</th>
+				<th scope="col">CesNonAdvlAmt</th>
+				<th scope="col">StateCesRt</th>
+				<th scope="col">StateCesAmt</th>
+				<th scope="col">StateCesNonAdvlAmt</th>
+				<th scope="col">OthChrg</th>
+				<th scope="col">TotItemVal</th>
+				<th scope="col">OrdLineRef</th>
+				<th scope="col">OrgCntry</th>
+				<th scope="col">PrdSlNo</th>
+
+
+				<th scope="col">Amt without GstRt</th>
+				<th scope="col">SGST</th>
+				<th scope="col">CGST</th>
+				<th scope="col">IGST</th>
+				<th scope="col">Amt with GST</th>
+
+			</tr>
+		</thead>
+	</table>
+		<tbody id="invoice-form-items-table-body">
+			<tr>
+				<td class="invoice-item-slno">1</td>
+				<td class="form-input-td"><input name="invoice-item" type="text" class="form-control item_search_area item_search_input" placeholder="Item"></td>
+				<td class="form-input-td"><input name="invoice-prdesc" type="text" class="form-control" placeholder="PrdDesc"></td>
+				<td class="form-input-td"><input name="invoice-isservc" type="text" class="form-control" placeholder="IsServc"></td>
+				<td class="form-input-td"><input name="invoice-hsncd" type="number" step="any" class="form-control" placeholder="HsnCd"></td>
+				<td class="form-input-td"><input name="invoice-barcde" type="number" step="any" class="form-control" placeholder="Barcde"></td>
+				<td class="form-input-td"><input name="invoice-qty" type="number" step="any" class="form-control" placeholder="Qty"></td>
+				<td class="form-input-td"><input name="invoice-freeqty" type="number" step="any" class="form-control" placeholder="FreeQty"></td>
+				<td class="form-input-td"><input name="invoice-unit" type="number" step="any" class="form-control" placeholder="Unit"></td>
+				<td class="form-input-td"><input name="invoice-unitprice" type="number" step="any" class="form-control" placeholder="UnitPrice"></td>
+				<td class="form-input-td"><input name="invoice-totamt" type="number" step="any" class="form-control" placeholder="TotAmt"></td>
+				<td class="form-input-td"><input name="invoice-discount" type="number" step="any" class="form-control" placeholder="Discount"></td>
+				<td class="form-input-td"><input name="invoice-pretaxval" type="number" step="any" class="form-control" placeholder="PreTaxVal"></td>
+				<td class="form-input-td"><input name="invoice-assamt" type="number" step="any" class="form-control" placeholder="AssAmt"></td>
+				<td class="form-input-td"><input name="invoice-gstrt" type="number" step="any" class="form-control" placeholder="GstRt"></td>
+				<td class="form-input-td"><input name="invoice-igstamt" type="number" step="any" class="form-control" placeholder="IgstAmt"></td>
+				<td class="form-input-td"><input name="invoice-cgstamt" type="number" step="any" class="form-control" placeholder="CgstAmt"></td>
+				<td class="form-input-td"><input name="invoice-sgstamt" type="number" step="any" class="form-control" placeholder="SgstAmt"></td>
+				<td class="form-input-td"><input name="invoice-cesrt" type="number" step="any" class="form-control" placeholder="CesRt"></td>
+				<td class="form-input-td"><input name="invoice-cesamt" type="number" step="any" class="form-control" placeholder="CesAmt"></td>
+				<td class="form-input-td"><input name="invoice-cesnonadvlamt" type="number" step="any" class="form-control" placeholder="CesNonAdvlAmt"></td>
+				<td class="form-input-td"><input name="invoice-statecesrt" type="number" step="any" class="form-control" placeholder="StateCesRt"></td>
+				<td class="form-input-td"><input name="invoice-statecesamt" type="number" step="any" class="form-control" placeholder="StateCesAmt"></td>
+				<td class="form-input-td"><input name="invoice-statecesnonadvlamt" type="number" step="any" class="form-control" placeholder="StateCesNonAdvlAmt"></td>
+				<td class="form-input-td"><input name="invoice-othchrg" type="number" step="any" class="form-control" placeholder="OthChrg"></td>
+				<td class="form-input-td"><input name="invoice-totitemval" type="number" step="any" class="form-control" placeholder="TotItemVal"></td>
+				<td class="form-input-td"><input name="invoice-ordlineref" type="number" step="any" class="form-control" placeholder="OrdLineRef"></td>
+				<td class="form-input-td"><input name="invoice-orgcntry" type="number" step="any" class="form-control" placeholder="OrgCntry"></td>
+				<td class="form-input-td"><input name="invoice-PrdSlNo" type="number" step="any" class="form-control" placeholder="PrdSlNo"></td>
+
+
+				<td class="form-input-td"><input name="invoice-rate-without-gst" type="number" step="any" class="form-control" placeholder="Rate without GST" readonly></td>
+				<td class="form-input-td"><input name="invoice-amt-without-gst" type="number" step="any" class="form-control" readonly></td>
+				<td class="form-input-td"><input name="invoice-amt-sgst" type="number" step="any" class="form-control" readonly></td>
+				<td class="form-input-td"><input name="invoice-amt-cgst" type="number" step="any" class="form-control" readonly></td>
+				<td class="form-input-td"><input name="invoice-amt-igst" type="number" step="any" class="form-control" readonly></td>
+				<td class="form-input-td"><input name="invoice-amt-with-gst" type="number" step="any" class="form-control" readonly></td>
+			</tr>
+			<tr>
+			<td colspan="8" class="text-right"><strong>TOTAL:</strong></td>
+			<td class="form-input-td"><input name="invoice-total-amt-without-gst" type="number" step="any" class="form-control" readonly></td>
+			<td class="form-input-td"><input name="invoice-total-amt-sgst" type="number" step="any" class="form-control" readonly></td>
+			<td class="form-input-td"><input name="invoice-total-amt-cgst" type="number" step="any" class="form-control" readonly></td>
+			<td class="form-input-td"><input name="invoice-total-amt-igst" type="number" step="any" class="form-control" readonly></td>
+			<td class="form-input-td"><input name="invoice-total-amt-with-gst" type="number" step="any" class="form-control" readonly></td>
+		</tr>
+		</tbody>
+	{% csrf_token %}
+	<button class="btn btn-primary" id="invoice-form-addrow">+</button>
+	<button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+
+
+</div>
+<div id="dispdlts_search_bar"></div>
+<div id="shipdlts_search_bar"></div>
+<div id="product_search_bar"></div>
+<div id="item_search_bar"></div>
+
+
+
+{% endblock %}
+
+
+
+{% block includejs %}
+<script src="{% static "js/fuse-3.4.6.min.js" %}"></script>
+<script src="{% static "js/main.js" %}"></script>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}
+<div class="row">
+	<div class="col">
+		<h2>ShipDlts</h2>
+	</div>
+	<div class="col">
+		<a href="{% url 'shipdlts_add' %}" id="add_shipdlts_btn"><button type="button" class="btn btn-primary">Add New</button></a>
+	</div>
+</div>
+
+<table class="table table-bordered" id="shipdlts-table">
+	<thead>
+		<tr>
+			<th>shipdlts Gstin</th>
+			<th>LglNm</th>
+			<th>TrdNm</th>
+			<th>Addr1</th>
+			<th>Addr2</th>
+			<th>Loc</th>
+			<th>Pin</th>
+			<th>Stcd</th>
+
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody class="two-col-form">
+		{% for shipdlts in shipdltss %}
+		<tr>
+			<td>{{shipdlts.shipdlts_gstin}}</td>
+			<td>{{shipdlts.shipdlts_lglnm}}</td>
+			<td>{{shipdlts.shipdlts_trdnm}}</td>
+			<td>{{shipdlts.shipdlts_addr1}}</td>
+			<td>{{shipdlts.shipdlts_addr2}}</td>
+			<td>{{shipdlts.shipdlts_loc}}</td>
+			<td>{{shipdlts.shipdlts_pin}}</td>
+			<td>{{shipdlts.shipdlts_stcd}}</td>
+			<td><a href="{% url 'shipdlts_edit' shipdlts.id %}"><button type="button" class="btn btn-dark">Edit</button></a></td>
+			<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#shipdltsDeleteModal" data-shipdlts-id="{{shipdlts.id}}" data-shipdlts-name="{{shipdlts.shipdlts_name}}">Delete</button></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<div class="modal fade" id="shipdltsDeleteModal" tabindex="-1" role="dialog" aria-labelledby="shipdltsDeleteModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="shipdltsDeleteModalLabel">Are you sure?</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form method="POST" action="{% url 'shipdlts_delete' %}">
+			{% csrf_token %}
+			<div class="modal-body">
+				Are you sure you want to delete <b><span class="shipdlts-gstin"></span></b>?
+					<div class="form-group">
+						<input hidden="true" type="text" class="form-control" name="shipdlts_id">
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-danger" >Yes</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+
+{% block includejs %}
+<script type="text/javascript">
+$('#shipdltsDeleteModal').on('show.bs.modal', function (event) {
+	var button = $(event.relatedTarget) 
+	var shipdlts_id = button.data('shipdlts-id') 
+	var shipdlts_gstin = button.data('shipdlts-gstin') 
+	var modal = $(this)
+	modal.find('.modal-body input').val(shipdlts_id)
+	console.log(shipdlts_gstin)
+	modal.find('.shipdlts-gstin').html(shipdlts_gstin)
+});
+
+
+$(document).ready( function () {
+	$('#shipdlts-table').DataTable({
+		"order": [],
+		"columnDefs": [ {
+			"targets": 4,
+			"sortable": false,
+			"searchable": false
+		},
+		{
+			"targets": 5,
+			"sortable": false,
+			"searchable": false
+		} ],
+		"paging": true
+	});
+});
+
+</script>
+{% endblock %}

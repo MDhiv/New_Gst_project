@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<h2>Edit Dispdlts</h2>
+<form method="POST">
+	{% csrf_token %}
+	<table class="table">
+		<tbody class="two-col-form">
+			<tr>
+				<th scope="row" class="text-right">Dispdlts Name:</th>
+				<td class="form-input-td">{{dispdlts_form.dispdlts_name}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right"> Address1:</th>
+				<td class="form-input-td">{{dispdlts_form.dispdlts_address1}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right"> Address2:</th>
+				<td class="form-input-td">{{dispdlts_form.dispdlts_address2}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right"> Loc:</th>
+				<td class="form-input-td">{{dispdlts_form.dispdlts_loc}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right"> Pin:</th>
+				<td class="form-input-td">{{dispdlts_form.dispdlts_pin}}</td>
+			</tr>
+			<tr>
+				<th scope="row" class="text-right"> Stcd:</th>
+				<td class="form-input-td">{{dispdlts_form.dispdlts_stcd}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<input type="submit" class="btn btn-primary float-right" value="Submit">
+</form>
+
+{% endblock %}

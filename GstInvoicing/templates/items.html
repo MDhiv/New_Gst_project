@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}
+		<div class="row">
+			<div class="col">
+				<h2>Items List</h2>
+			</div>
+			<div class="col">
+				<a href="{% url 'item_add' %}" id="add_item_btn"><button type="button" class="btn btn-primary">Add New</button></a>
+			</div>
+		</div>
+
+		<table class="table table-bordered" id="item-table">
+			<thead>
+				<tr>
+                    <th>Item SlNo</th>
+                     <th>PrdDesc</th>  
+                     <th>IsServc</th>  
+                     <th>HsnCd</th>  
+                     <th>Barcde</th>  
+                     <th>Qty</th>  
+                     <th>FreeQty</th>  
+                     <th>Unit</th>  
+                     <th>UnitPrice</th>  
+                     <th>TotAmt</th>  
+                     <th>Discount</th>  
+                     <th>PreTaxVal</th>  
+                     <th>AssAmt</th>  
+                     <th>GstRt</th>  
+                     <th>IgstAmt</th>  
+                     <th>CgstAmt</th>  
+                     <th>SgstAmt</th>  
+                     <th>CesRt</th>  
+                     <th>CesAmt</th>  
+                     <th>CesNonAdvlAmt</th>  
+                     <th>StateCesRt</th>  
+                     <th>StateCesAmt</th>  
+                     <th>StateCesNonAdvlAmt</th>  
+                     <th>OthChrg</th>  
+                     <th>TotItemVal</th>  
+                     <th>OrdLineRef</th>  
+                     <th>OrgCntry</th>  
+                     <th> PrdSlNo</th><br>
+					 <th></th>
+					 <th></th>
+				</tr>
+			</thead>
+			<tbody class="two-col-form">
+				{% for item in items %}
+				<tr>
+                    <td>{{ item.item_slno }}</td>  
+                    <td>{{ item.item_prdesc }}</td>  
+                    <td>{{ item.item_isservc }}</td>  
+                    <td>{{ item.item_hsncd }}</td>  
+                    <td>{{ item.item_barcde }}</td>  
+                    <td>{{ item.item_qty }}</td>  
+                    <td>{{ item.item_freeqty }}</td>  
+                    <td>{{ item.item_unit }}</td>  
+                    <td>{{ item.item_unitprice }}</td>  
+                    <td>{{ item.item_totamt }}</td>  
+                    <td>{{ item.item_discount }}</td>  
+                    <td>{{ item.item_pretaxval }}</td>  
+                    <td>{{ item.item_assamt }}</td>  
+                    <td>{{ item.item_gstrt }}</td>  
+                    <td>{{ item.item_igstamt }}</td>  
+                    <td>{{ item.item_cgstamt }}</td>  
+                    <td>{{ item.item_sgstamt }}</td>  
+                    <td>{{ item.item_cesrt }}</td>  
+                    <td>{{ item.item_cesamt }}</td>  
+                    <td>{{ item.item_cesnonadvlamt }}</td>  
+                    <td>{{ item.item_statecesrt }}</td>  
+                    <td>{{ item.item_statecesamt }}</td>  
+                    <td>{{ item.item_statecesnonadvlamt }}</td>  
+                    <td>{{ item.item_othchrg }}</td>  
+                    <td>{{ item.item_totitemval }}</td>  
+                    <td>{{ item.item_ordlineref }}</td>  
+                    <td>{{ item.item_orgcntry }}</td>  
+                    <td>{{ item.item_prdslno }}</td>  
+	 				<td><a href="{% url 'item_edit' item.id %}"><button type="button" class="btn btn-primary">Edit</button></a></td>
+	 				<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#itemDeleteModal" data-item-id="{{item.id}}" data-item-name="{{item.item_slno}}">Delete</button></td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+<div class="modal fade" id="itemDeleteModal" tabindex="-1" role="dialog" aria-labelledby="itemDeleteModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="itemDeleteModalLabel">Are you sure?</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form method="POST" action="{% url 'item_delete' %}">
+			{% csrf_token %}
+			<div class="modal-body">
+				Are you sure you want to delete <b><span class="item-slno"></span></b>?
+					<div class="form-group">
+						<input hidden="true" type="text" class="form-control" name="item_id">
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-danger" >Yes</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+
+
+
+{% block includejs %}
+<script type="text/javascript">
+$('#itemDeleteModal').on('show.bs.modal', function (event) {
+	var button = $(event.relatedTarget)
+	var item_id = button.data('item-id')
+	var item_slno = button.data('item-slno')
+	var modal = $(this)
+	modal.find('.modal-body input').val(item_id)
+	console.log(item_slno)
+	modal.find('.item_slno').html(item_slno)
+})
+
+$(document).ready( function () {
+	$('#item-table').DataTable({
+		"order": [],
+		"columnDefs": [ {
+			"targets": 4,
+			"sortable": false,
+			"searchable": false
+		},
+		{
+			"targets": 5,
+			"sortable": false,
+			"searchable": false
+		} ],
+		"paging": true
+	});
+});
+
+</script>
+{% endblock %}

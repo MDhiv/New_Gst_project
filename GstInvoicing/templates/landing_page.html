@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% load static %}
+<!doctype html>
+
+{% block title %}
+GST invoicing 
+{% endblock %}
+
+{% block metatags %}
+<meta name="description" content="Create GST invoice/bills for free. Automatic inventory Management and Books management.">
+<meta name="google-site-verification" content="MJbX1a9Fs1MIE1tnpRnp4At9OzVMxoumTAvOWUlG8-w" />
+<link rel="canonical" href="https://billgst.in/" />
+
+<meta property="og:title" content="BillGST - Simplest GST invoicing | Inventory Management | Book keeping" />
+<meta property="og:url" content="https://billgst.in" />
+<meta property="og:image" content="https://billgst.in{% static "images/screenshot_interface.png" %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron">
+	<h1 class="display-3">GST</h1>
+	<h2 class="display-6"><b>GST invoicing</b> app.</h2>
+	<hr class="my-4">
+    <p class="lead">
+		<a class="btn btn-primary btn-lg" href="{% url 'invoice_create' %}" role="button">Create Invoice</a>
+	</p> 
+</div>
+{% endblock %}
