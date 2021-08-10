@@ -34,11 +34,11 @@ urlpatterns = [
     path('products/delete', views.product_delete, name='product_delete'),
     path('productsjson', views.productsjson, name='productsjson'),
 
-    # path('items', views.items, name='items'),
-    # path('items/add', views.item_add, name='item_add'),
-    # path('items/edit/<int:item_id>', views.item_edit, name='item_edit'),
-    # path('items/delete', views.item_delete, name='item_delete'),
-    # path('itemsjson', views.itemsjson, name='itemsjson'),
+    path('items', views.items, name='items'),
+    path('items/add', views.item_add, name='item_add'),
+    path('items/edit/<int:item_id>', views.item_edit, name='item_edit'),
+    path('items/delete', views.item_delete, name='item_delete'),
+    path('itemsjson', views.itemsjson, name='itemsjson'),
 
     path('inventory', views.inventory, name='inventory'),
     path('inventory/<int:inventory_id>', views.inventory_logs, name='inventory_logs'),
