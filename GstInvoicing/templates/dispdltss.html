@@ -25,6 +25,7 @@
 			<th>Stcd</th>
 			<th></th>
 			<th></th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody class="two-col-form">
@@ -36,7 +37,7 @@
 			<td>{{dispdlts.dispdlts_loc}}</td>
 			<td>{{dispdlts.dispdlts_pin}}</td>
 			<td>{{dispdlts.dispdlts_stcd}}</td>
-
+		    <td><a href="{% url 'dispdlts_viewer' dispdlts.id %}"><button type="button" class="btn btn-primary">View</button></a></td>
 			<td><a href="{% url 'dispdlts_edit' dispdlts.id %}"><button type="button" class="btn btn-dark">Edit</button></a></td>
 			<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#dispdltsDeleteModal" data-dispdlts-id="{{dispdlts.id}}" data-dispdlts-name="{{dispdlts.dispdlts_name}}">Delete</button></td>
 		</tr>

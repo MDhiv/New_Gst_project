@@ -107,7 +107,7 @@ input.form-control[type=number] {
 
 /*Customer and Product Page ************************/
 
-#add_customer_btn, #add_product_btn {
+#add_customer_btn, #add_product_btn,#add_item_btn {
 	float: right;
 }
 
@@ -122,6 +122,10 @@ input.form-control[type=number] {
 
 
 #invoice_profile_data {
+	white-space: pre-line;
+}
+
+#dispdlts_profile_data{
 	white-space: pre-line;
 }
 

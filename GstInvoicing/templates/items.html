@@ -41,7 +41,7 @@
                      <th>TotItemVal</th>  
                      <th>OrdLineRef</th>  
                      <th>OrgCntry</th>  
-                     <th> PrdSlNo</th><br>
+                     <th>PrdSlNo</th><br>
 					 <th></th>
 					 <th></th>
 				</tr>
@@ -50,7 +50,7 @@
 				{% for item in items %}
 				<tr>
                     <td>{{ item.item_slno }}</td>  
-                    <td>{{ item.item_prdesc }}</td>  
+                    <td>{{ item.item_prddesc }}</td>  
                     <td>{{ item.item_isservc }}</td>  
                     <td>{{ item.item_hsncd }}</td>  
                     <td>{{ item.item_barcde }}</td>  
@@ -78,7 +78,7 @@
                     <td>{{ item.item_orgcntry }}</td>  
                     <td>{{ item.item_prdslno }}</td>  
 	 				<td><a href="{% url 'item_edit' item.id %}"><button type="button" class="btn btn-primary">Edit</button></a></td>
-	 				<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#itemDeleteModal" data-item-id="{{item.id}}" data-item-name="{{item.item_slno}}">Delete</button></td>
+	 				<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#itemDeleteModal" data-item-id="{{item.id}}" data-item-slno="{{item.item_slno}}">Delete</button></td>
 				</tr>
 				{% endfor %}
 			</tbody>

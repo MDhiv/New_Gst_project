@@ -1,7 +1,3 @@
-import datetime
-import json
-import num2words
-
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
@@ -15,28 +11,16 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 from .models import Dispdlts
 from .models import Shipdlts
-from .models import Invoice
 from .models import Product
 from .models import Item
 from .models import UserProfile
-from .models import Inventory
-from .models import InventoryLog
 
-
-from .utils import invoice_data_dispdlts_validator, invoice_data_validator
-from .utils import invoice_data_processor
-from .utils import update_products_from_invoice
-from .utils import update_items_from_invoice
-from .utils import update_inventory
-from .utils import create_inventory
-from .utils import remove_inventory_entries_for_invoice
 
 from .forms import DispdltsForm 
 from .forms import ShipdltsForm
 from .forms import ProductForm
 from .forms import ItemForm
 from .forms import UserProfileForm
-from .forms import InventoryLogForm
 
 # Create your views here.
 
@@ -66,7 +50,7 @@ def user_profile(request):
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect("invoice_create")
+        return redirect("product_add")
     context = {}
     auth_form = AuthenticationForm(request)
     if request.method == "POST":
@@ -75,7 +59,7 @@ def login_view(request):
             user = auth_form.get_user()
             if user:
                 login(request, user)
-                return redirect("invoice_create")
+                return redirect("product_add")
         else:
             context["error_message"] = auth_form.get_invalid_login_error()
     context["auth_form"] = auth_form
@@ -84,7 +68,7 @@ def login_view(request):
 
 def signup_view(request):
     if request.user.is_authenticated:
-        return redirect("invoice_create")
+        return redirect("product_add")
     context = {}
     signup_form = UserCreationForm()
     profile_edit_form = UserProfileForm()
@@ -108,100 +92,8 @@ def signup_view(request):
             userprofile.user = user
             userprofile.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect("invoice_create")
-
-
-
+            return redirect("product_add")
     return render(request, 'signup.html', context)
-
-
-
-# Invoice, products===============================================
-
-@login_required
-def invoice_create(request):
-    # if business info is blank redirect to update it
-    user_profile = get_object_or_404(UserProfile, user=request.user)
-    if not user_profile.business_title:
-        return redirect('user_profile_edit')
-
-    context = {}
-    context['default_invoice_number'] = Invoice.objects.filter(user=request.user).aggregate(Max('invoice_number'))['invoice_number__max']
-    if not context['default_invoice_number']:
-        context['default_invoice_number'] = 1
-    else:
-        context['default_invoice_number'] += 1
-
-    context['default_invoice_date'] = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d')
-
-    if request.method == 'POST':
-        print("POST received - Invoice Data")
-
-        invoice_data = request.POST
-
-        validation_error = invoice_data_validator(invoice_data)
-        if validation_error:
-            context["error_message"] = validation_error
-            return render(request, 'invoice_create.html', context)
-
-        # valid invoice data
-        print("Valid Invoice Data")
-
-        invoice_data_processed = invoice_data_processor(invoice_data)
-        # save product
-        update_products_from_invoice(invoice_data_processed, request)
-        update_items_from_invoice(invoice_data_processed, request)
-
- # save invoice
-        invoice_data_processed_json = json.dumps(invoice_data_processed)
-        new_invoice = Invoice(user=request.user,
-                              invoice_number=int(invoice_data['invoice-number']),
-                              invoice_date=datetime.datetime.strptime(invoice_data['invoice-date'], '%Y-%m-%d'),
-                              invoice_data_dispdlts_validator = dispdltss, invoice_json=invoice_data_processed_json)
-        new_invoice.save()
-        print("INVOICE SAVED")
-
-        update_inventory(new_invoice, request)
-        print("INVENTORY UPDATED")
-
-
-
-        return redirect('invoice_viewer', invoice_id=new_invoice.id)
-
-    return render(request, 'invoice_create.html', context)
-
-
-@login_required
-def invoices(request):
-    context = {}
-    context['invoices'] = Invoice.objects.filter(user=request.user).order_by('-id')
-    return render(request, 'invoices.html', context)
-
-
-@login_required
-def invoice_viewer(request, invoice_id):
-    invoice_obj = get_object_or_404(Invoice, user=request.user, id=invoice_id)
-    user_profile = get_object_or_404(UserProfile, user=request.user)
-
-    context = {}
-    context['invoice'] = invoice_obj
-    context['invoice_data'] = json.loads(invoice_obj.invoice_json)
-    print(context['invoice_data'])
-    context['currency'] = "₹"
-    context['total_in_words'] = num2words.num2words(int(context['invoice_data']['invoice_total_amt_with_gst']), lang='en_IN').title()
-    context['user_profile'] = user_profile
-    return render(request, 'invoice_printer.html', context)
-
-
-@login_required
-def invoice_delete(request):
-    if request.method == "POST":
-        invoice_id = request.POST["invoice_id"]
-        invoice_obj = get_object_or_404(Invoice, user=request.user, id=invoice_id)
-        if len(request.POST.getlist('inventory-del')):
-            remove_inventory_entries_for_invoice(invoice_obj, request.user)
-        invoice_obj.delete()
-    return redirect('invoices')
 
 
 
@@ -234,8 +126,6 @@ def dispdltssjson(request):
     dispdltss = list(Dispdlts.objects.filter(user=request.user).values())
     return JsonResponse(dispdltss, safe=False)
 
-
-
 @login_required
 def shipdltssjson(request):
     shipdltss = list(Shipdlts.objects.filter(user=request.user).values())
@@ -265,8 +155,18 @@ def dispdlts_edit(request, dispdlts_id):
     return render(request, 'dispdlts_edit.html', context)
 
 @login_required
-def shipdlts_edit(request, shipdlts_gstin):
-    shipdlts_obj = get_object_or_404(Shipdlts, user=request.user, id=shipdlts_gstin)
+def dispdlts_viewer(request, dispdlts_id):
+    dispdlts_obj = get_object_or_404(Dispdlts, user=request.user, id=dispdlts_id)
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+
+    context = {}
+    context['dispdlts'] = dispdlts_obj
+    context['user_profile'] = user_profile
+    return render(request, 'dispdlts_printer.html', context)
+
+@login_required
+def shipdlts_edit(request, shipdlts_id):
+    shipdlts_obj = get_object_or_404(Shipdlts, user=request.user, id=shipdlts_id)
     if request.method == "POST":
         shipdlts_form = ShipdltsForm(request.POST, instance=shipdlts_obj)
         if shipdlts_form.is_valid():
@@ -275,6 +175,16 @@ def shipdlts_edit(request, shipdlts_gstin):
     context = {}
     context['shipdlts_form'] = ShipdltsForm(instance=shipdlts_obj)
     return render(request, 'shipdlts_edit.html', context)
+
+@login_required
+def shipdlts_viewer(request, shipdlts_id):
+    shipdlts_obj = get_object_or_404(Shipdlts, user=request.user, id=shipdlts_id)
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+
+    context = {}
+    context['shipdlts'] = shipdlts_obj
+    context['user_profile'] = user_profile
+    return render(request, 'shipdlts_printer.html', context)
 
 @login_required
 def dispdlts_delete(request):
@@ -287,8 +197,8 @@ def dispdlts_delete(request):
 @login_required
 def shipdlts_delete(request):
     if request.method == "POST":
-        shipdlts_gstin = request.POST["shipdlts_gstin"]
-        shipdlts_obj = get_object_or_404(Shipdlts, user=request.user, id=shipdlts_gstin)
+        shipdlts_id = request.POST["shipdlts_id"]
+        shipdlts_obj = get_object_or_404(Shipdlts, user=request.user, id=shipdlts_id)
         shipdlts_obj.delete()
     return redirect('shipdltss')
 
@@ -301,8 +211,6 @@ def dispdlts_add(request):
         new_dispdlts = dispdlts_form.save(commit=False)
         new_dispdlts.user = request.user
         new_dispdlts.save()
-        # create dispdlts book
-        # add_dispdlts_book(new_dispdlts)
         return redirect('dispdltss')
     context = {}
     context['dispdlts_form'] = DispdltsForm()
@@ -315,8 +223,7 @@ def shipdlts_add(request):
         new_shipdlts = shipdlts_form.save(commit=False)
         new_shipdlts.user = request.user
         new_shipdlts.save()
-        # create shipdlts book
-        # add_shipdlts_book(new_shipdlts)
+
         return redirect('shipdltss')
     context = {}
     context['shipdlts_form'] = ShipdltsForm()
@@ -354,7 +261,6 @@ def product_add(request):
             new_product = product_form.save(commit=False)
             new_product.user = request.user
             new_product.save()
-            create_inventory(new_product)
 
             return redirect('products')
     context = {}
@@ -378,7 +284,6 @@ def item_add(request):
             new_item = item_form.save(commit=False)
             new_item.user = request.user
             new_item.save()
-            create_inventory(new_item)
 
             return redirect('items')
     context = {}
@@ -393,81 +298,6 @@ def item_delete(request):
         item_obj = get_object_or_404(Item, user=request.user, id=item_id)
         item_obj.delete()
     return redirect('items')
-
-
-
-# ================= Inventory Views ===========================
-@login_required
-def inventory(request):
-    context = {}
-    context['inventory_list'] = Inventory.objects.filter(user=request.user)
-    context['untracked_products'] = Product.objects.filter(user=request.user, inventory=None)
-    return render(request, 'inventory.html', context)
-
-@login_required
-def inventory(request):
-    context = {}
-    context['inventory_list'] = Inventory.objects.filter(user=request.user)
-    context['untracked_items'] = Item.objects.filter(user=request.user, inventory=None)
-    return render(request, 'inventory.html', context)
-
-@login_required
-def inventory_logs(request, inventory_id):
-    context = {}
-    inventory = get_object_or_404(Inventory, id=inventory_id, user=request.user)
-    inventory_logs = InventoryLog.objects.filter(user=request.user, product=inventory.product).order_by('-id')
-    context['inventory'] = inventory
-    context['inventory_logs'] = inventory_logs
-    return render(request, 'inventory_logs.html', context)
-
-@login_required
-def inventory_logs(request, inventory_id):
-    context = {}
-    inventory = get_object_or_404(Inventory, id=inventory_id, user=request.user)
-    inventory_logs = InventoryLog.objects.filter(user=request.user, item=inventory.item).order_by('-id')
-    context['inventory'] = inventory
-    context['inventory_logs'] = inventory_logs
-    return render(request, 'inventory_logs.html', context)
-
-@login_required
-def inventory_logs_add(request, inventory_id):
-    context = {}
-    inventory = get_object_or_404(Inventory, id=inventory_id, user=request.user)
-    inventory_logs = Inventory.objects.filter(user=request.user, product=inventory.product)
-    inventory_logs = Inventory.objects,filter(user=request.user, item=inventory.item)
-    context['inventory'] = inventory
-    context['inventory_logs'] = inventory_logs
-    context['form'] = InventoryLogForm()
-
-    if request.method == "POST":
-        inventory_log_form = InventoryLogForm(request.POST)
-        invoice_no = request.POST["invoice_no"]
-        invoice = None
-        if invoice_no:
-            try:
-                invoice_no = int(invoice_no)
-                invoice = Invoice.objects.get(user=request.user, invoice_number=invoice_no)
-            except:
-                context['error_message'] = "Incorrect invoice number %s"%(invoice_no,)
-                return render(request, 'inventory_logs_add.html', context)
-                context['form'] = inventory_log_form
-                return render(request, 'inventory_logs_add.html', context)
-
-
-        inventory_log = inventory_log_form.save(commit=False)
-        inventory_log.user = request.user
-        inventory_log.product = inventory.product
-        inventory_log.item  = inventory.item
-        if invoice:
-            inventory_log.associated_invoice = invoice
-        inventory_log.save()
-        inventory.current_stock = inventory.current_stock + inventory_log.change
-        inventory.last_log = inventory_log
-        inventory.save()
-        return redirect('inventory_logs', inventory.id)
-
-    
-    return render(request, 'inventory_logs_add.html', context)
 
 # ================= Static Pages ==============================
 

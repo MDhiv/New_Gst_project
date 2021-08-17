@@ -5,7 +5,6 @@ from .models import Shipdlts
 from .models import Product
 from .models import Item
 from .models import UserProfile
-from .models import InventoryLog
 
 
 class DispdltsForm(ModelForm):
@@ -29,7 +28,7 @@ class ItemForm(ModelForm):
          model = Item
          fields = [
                  'item_slno', 
-                 'item_prdesc', 
+                 'item_prddesc', 
                  'item_isservc', 
                  'item_hsncd', 
                  'item_barcde', 
@@ -70,8 +69,3 @@ class UserProfileForm(ModelForm):
         model = UserProfile
         fields = ['business_title', 'business_address', 'business_email', 'business_phone', 'business_gst']
 
-
-class InventoryLogForm(ModelForm):
-    class Meta:
-        model = InventoryLog
-        fields = ['date', 'change', 'change_type', 'description']

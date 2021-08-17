@@ -1,0 +1,41 @@
+{% extends "print_base.html" %}
+
+
+{% block content %}
+
+	<div class="card">
+		<div class="card-header">
+			<div class="row">
+			<h4> Shipdlts Details</h4>
+			</div>
+		</div>
+
+		<div class="card-body">
+			<div class="row">
+				<div class="col-sm-6 col-md-6 col-lg-6 col-6">
+					<h6 class="mb-3">Billed To:</h6>
+					<div>
+						<strong>{{ shipdlts.shipdlts_gstin }}</strong>
+					</div>
+					<div>{{ shipdlts.shipdlts_lglnm }}</div>
+					<div>{{ shipdlts.shipdlts_trdnm }}</div>
+					<div>Address1: {{ shipdlts.shipdlts_addr1 }}</div>
+					<div>Address2: {{ shipdlts.shipdlts_addr2 }}</div>
+					<div>Loc: {{ shipdlts.shipdlts_loc }}</div>
+					<div>Pin: {{ shipdlts.shipdlts_pin }}</div>
+					<div>Stcd: {{ shipdlts.shipdlts_stcd }}</div>
+				</div>
+
+			</div>
+
+
+
+
+		</div>
+	</div>
+
+	<button onclick="window.print();" class="btn btn-primary d-print-none">Print Shipdlts</button>
+
+
+{% endblock %}
+

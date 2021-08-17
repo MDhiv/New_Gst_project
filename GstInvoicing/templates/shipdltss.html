@@ -4,7 +4,7 @@
 {% block content %}
 <div class="row">
 	<div class="col">
-		<h2>ShipDlts</h2>
+		<h2>ShipDlts Details</h2>
 	</div>
 	<div class="col">
 		<a href="{% url 'shipdlts_add' %}" id="add_shipdlts_btn"><button type="button" class="btn btn-primary">Add New</button></a>
@@ -25,6 +25,7 @@
 
 			<th></th>
 			<th></th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody class="two-col-form">
@@ -38,8 +39,9 @@
 			<td>{{shipdlts.shipdlts_loc}}</td>
 			<td>{{shipdlts.shipdlts_pin}}</td>
 			<td>{{shipdlts.shipdlts_stcd}}</td>
+		    <td><a href="{% url 'shipdlts_viewer' shipdlts.id %}"><button type="button" class="btn btn-primary">View</button></a></td>
 			<td><a href="{% url 'shipdlts_edit' shipdlts.id %}"><button type="button" class="btn btn-dark">Edit</button></a></td>
-			<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#shipdltsDeleteModal" data-shipdlts-id="{{shipdlts.id}}" data-shipdlts-name="{{shipdlts.shipdlts_name}}">Delete</button></td>
+			<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#shipdltsDeleteModal" data-shipdlts-id="{{shipdlts.id}}" data-shipdlts-gstin="{{shipdlts.shipdlts_gstin}}">Delete</button></td>
 		</tr>
 		{% endfor %}
 	</tbody>
