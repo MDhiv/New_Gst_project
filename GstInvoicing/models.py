@@ -20,7 +20,7 @@ class UserProfile(models.Model):
 class Plan(models.Model):
     plan_name = models.TextField(max_length=20, blank=True, null=True)
     plan_value = models.IntegerField(blank=True, null=True)
-    monthly_invoice_limit = models.IntegerField(blank=True, null=True)
+    # monthly_invoice_limit = models.IntegerField(blank=True, null=True)
 
 
 class BillingProfile(models.Model):
@@ -31,7 +31,6 @@ class BillingProfile(models.Model):
 
     def __str__(self):
         return self.user.username
-
 
 
 class Dispdlts(models.Model):
@@ -60,25 +59,6 @@ class Shipdlts(models.Model):
     def __str__(self):
         return self.shipdlts_gstin
 
-class Invoice(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
-    invoice_number = models.IntegerField()
-    invoice_date = models.DateField()
-    invoice_dispdlts = models.ForeignKey(
-        'Dispdlts',
-        on_delete=models.SET_NULL,
-        null=True
-    )
-    invoice_shipdlts = models.ForeignKey(
-        'Shipdlts',
-        on_delete=models.SET_NULL,
-        null=True
-    )
-    invoice_json = models.TextField()
-    inventory_reflected = models.BooleanField(default=True)
-    def __str__(self):
-        return str(self.invoice_number) + " | " + str(self.invoice_date)
-
 
 class Product(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
@@ -93,7 +73,7 @@ class Product(models.Model):
 class Item(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     item_slno = models.CharField(max_length=30)
-    item_prdesc = models.CharField(max_length=30)
+    item_prddesc = models.CharField(max_length=30)
     item_isservc = models.CharField(max_length=30)
     item_hsncd = models.CharField(max_length=30)
     item_freeqty = models.CharField(max_length=30)
@@ -124,38 +104,7 @@ class Item(models.Model):
     def __str__(self):
         return str(self.item_slno)
 
-class InventoryLog(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
-    product = models.ForeignKey(Product, null=True, blank=True, on_delete=models.SET_NULL)
-    item = models.ForeignKey(Item, null=True, blank=True, on_delete=models.SET_NULL)
-    date = models.DateTimeField(default=datetime.now, blank=True, null=True)
-    last_modified = models.DateTimeField(auto_now=True)
-    change = models.IntegerField(default=0)
-    CHANGE_TYPES = [
-        (0, 'Other'),
-        (1, 'Purchase'),
-        (2, 'Production'),
-        (3, 'Item'),
-        (4, 'Sales'),
-    ]
-    change_type = models.IntegerField(choices=CHANGE_TYPES, default=0)
 
-    associated_invoice = models.ForeignKey(Invoice, blank=True, null=True, default=None, on_delete=models.SET_NULL)
-    description = models.TextField(max_length=600, blank=True, null=True)
-
-    def __str__(self):
-        return self.product.product_name + " | " + str(self.change) + " | " + self.description + " | " + str(self.date)
-
-class Inventory(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
-    product = models.ForeignKey(Product, null=True, blank=True, on_delete=models.SET_NULL)
-    item = models.ForeignKey(Item,null=True, blank=True, on_delete=models.SET_NULL)
-    current_stock = models.IntegerField(default=0)
-    alert_level = models.IntegerField(default=0)
-    last_log = models.ForeignKey(InventoryLog, null=True, blank=True, default=None, on_delete=models.SET_NULL)
-
-    def __str__(self):
-        return self.product.product_name
 
 
 
