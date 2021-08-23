@@ -12,7 +12,7 @@ urlpatterns = [
     path('signup', views.signup_view, name='signup_view'),
     path('accounts/', include('django.contrib.auth.urls')),
 
-    
+
     path('dispdltss', views.dispdltss, name='dispdltss'),
     path('dispdlts/<int:dispdlts_id>', views.dispdlts_viewer, name='dispdlts_viewer'),
     path('dispdltss/add', views.dispdlts_add, name='dispdlts_add'),
